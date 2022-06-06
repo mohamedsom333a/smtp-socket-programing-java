@@ -1,0 +1,127 @@
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.InetAddress;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.util.Scanner;
+import java.io.IOException;
+public class client {
+public static void main (String[] args)
+{
+    try{
+            Scanner scanner=new Scanner(System.in);
+            System.out.println(" enter server port number ");
+            int portnumber=scanner.nextInt();           
+            InetAddress ip=InetAddress.getByName("localhost");
+            Socket clientsocket=new Socket(ip,portnumber);
+            DataInputStream input=new DataInputStream(clientsocket.getInputStream());
+            DataOutputStream output=new DataOutputStream(clientsocket.getOutputStream());        
+            String connectconfirm=input.readUTF();
+            System.out.println("server is "+connectconfirm);
+            String option;
+            System.out.println("please choose register or login or quite ");
+            
+            while (true)
+            {
+            String user;
+            String password;
+            option=scanner.nextLine();
+            output.writeUTF(option);
+            if(option.equalsIgnoreCase("login"))
+            {
+                System.out.println("ener email and password");
+                user=scanner.nextLine();
+                password=scanner.nextLine();
+                output.writeUTF(user);
+                output.writeUTF(password);
+                System.out.println(input.readUTF());
+                String mail;
+                System.out.println("choose send or Quite");
+                mail=scanner.nextLine();
+                output.writeUTF(mail);///send or quite 
+                if (mail.equalsIgnoreCase("send"))
+                {
+                    while (mail.equalsIgnoreCase("send"))
+                    {
+                    output.writeUTF("mail from "+user);////////
+                    System.out.println(input.readUTF());////////////////"server 250: "+user+" sender ok"
+                    System.out.println(input.readUTF());///////////////// toshow message "recipt to"
+                    String recipt=scanner.nextLine();
+                    output.writeUTF(recipt);/////// send recipt
+                    output.writeUTF("DATA");
+                    System.out.println(input.readUTF());
+                    System.out.println(input.readUTF());
+                    String email=" ";
+                    //////////////
+                    while (!email.equalsIgnoreCase("&&&"))
+                    {
+                       email=scanner.nextLine();
+                       output.writeUTF(email);//////////// for message sent to user 
+                    }
+                    System.out.println(input.readUTF());///////////////Server: 250 Message accepted for delivery \nPlease choose ‘SEND’ or ‘QUIT
+                    email=scanner.nextLine();
+                    output.writeUTF(email);
+                    }
+                    System.out.println(input.readUTF());
+                }
+                else
+                    clientsocket.close();
+            }
+            else if (option.equalsIgnoreCase("register"))
+            {
+                System.out.println("please enter an email and password");
+                user=scanner.nextLine();
+                output.writeUTF(user);
+                password=scanner.nextLine();
+                output.writeUTF(password);
+                output.writeUTF("HELLO "+user);
+                System.out.println(input.readUTF());/////// to print 250 Hello "+user+" pleased to meet you"
+                String mail;
+                System.out.println("choose send or Quite");
+                mail=scanner.nextLine();
+                output.writeUTF(mail);/////////////send or quite 
+                if(mail.equalsIgnoreCase("send"))
+                {
+                    while (mail.equalsIgnoreCase("send"))
+                    {
+                    output.writeUTF("mail from "+user);////////
+                    System.out.println(input.readUTF());////////////////"server 250: "+user+" sender ok"
+                    System.out.println(input.readUTF());///////////////// toshow message "recipt to"
+                    String recipt=scanner.nextLine();
+                    output.writeUTF(recipt);/////// send recipt
+                    output.writeUTF("DATA");
+                    System.out.println(input.readUTF());
+                    System.out.println(input.readUTF());
+                    String email=" ";
+                    while (!email.equalsIgnoreCase("&&&"))
+                    {
+                       email=scanner.nextLine();
+                       output.writeUTF(email);//////////// for message sent to user 
+                    }
+                    System.out.println(input.readUTF());///////////////Server: 250 Message accepted for delivery \nPlease choose ‘SEND’ or ‘QUIT
+                    email=scanner.nextLine();
+                    output.writeUTF(email);
+                    }
+                    System.out.println(input.readUTF());
+                }
+                else
+                {
+                    System.out.println("client closed");
+                    clientsocket.close();
+                }
+            }
+            else if (option.equalsIgnoreCase("Quite"))
+                {
+                    output.writeUTF("client closed");
+                    clientsocket.close();
+                }
+            }
+    }
+    catch(IOException e)
+    {
+        e.printStackTrace();
+    }  
+}
+}
+
+
